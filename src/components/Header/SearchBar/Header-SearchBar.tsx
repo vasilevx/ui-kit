@@ -22,7 +22,6 @@ type SearchBarProps = {
   value?: SearchBarPropValue;
   onSearch?: SearchBarPropOnSearch;
   onChange?: SearchBarPropOnChange;
-  children?: never;
 };
 
 export const HeaderSearchBar: React.FC<SearchBarProps> = ({

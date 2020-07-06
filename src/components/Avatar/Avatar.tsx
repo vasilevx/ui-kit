@@ -14,7 +14,6 @@ type Props = {
   name?: string;
   size?: AvatarPropSize;
   form?: AvatarPropForm;
-  children?: never;
 };
 
 export const cnAvatar = cn('Avatar');

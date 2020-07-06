@@ -54,6 +54,7 @@ type Props = {
   view?: TextPropView;
   weight?: TextPropWeight;
   width?: TextPropWidth;
+  children?: React.ReactNode;
 };
 
 export const cnText = cn('Text');

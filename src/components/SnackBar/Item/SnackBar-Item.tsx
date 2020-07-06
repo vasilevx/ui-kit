@@ -15,7 +15,7 @@ export type SnackBarItemProps = {
   item: Item;
 };
 
-const defaultInitialTimerTime = 3;
+const defaultInitialTimerTime = 3000;
 
 const getAutoCloseTime = (autoClose: boolean | number | undefined): number | false => {
   if (autoClose) {
@@ -74,11 +74,7 @@ export const SnackBarItem: React.FC<SnackBarItemProps> = (props) => {
       )}
       {!autoCloseTime && Icon && <Icon className={cnSnackBar('Icon')} size="m" />}
       <div className={cnSnackBar('Content')}>
-        {message && (
-          <Text className={cnSnackBar('Message')} lineHeight="s">
-            {message}
-          </Text>
-        )}
+        {message && <Text lineHeight="s">{message}</Text>}
         {actions && <SnackBarActionButton actions={actions} />}
       </div>
       {onClose && (

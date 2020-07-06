@@ -13,7 +13,6 @@ type Props = {
   personAvatarUrl?: string;
   isMinified?: boolean;
   className?: string;
-  children?: never;
 };
 
 export const HeaderLogin: React.FC<Props> = ({

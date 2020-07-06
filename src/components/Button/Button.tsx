@@ -34,7 +34,6 @@ type Props = {
   onlyIcon?: boolean;
   iconSize?: IconPropSize;
   title?: string;
-  children?: never;
 };
 
 export const cnButton = cn('Button');

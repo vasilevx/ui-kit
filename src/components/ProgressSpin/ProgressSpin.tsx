@@ -11,7 +11,6 @@ type Props = {
   className?: string;
   progress?: number;
   animation?: boolean;
-  children?: never;
 };
 export type ProgressSpinProps = PropsWithHTMLAttributes<Props, SVGElement>;
 
