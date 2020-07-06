@@ -33,7 +33,6 @@ type Props = {
   loading?: boolean;
   loadingWithProgressSpin?: boolean;
   loadingProgress?: number;
-  children?: never;
 };
 
 export type FileProps = Props & Omit<FileIconProps, keyof Props>;
@@ -70,7 +69,7 @@ export const File: React.FC<FileProps> = (props) => {
     );
   }
 
-  const extensionToSvg: { [value: string]: React.FC<FileIconProps> } = {
+  const extensionToSvg: { [value: string]: React.FC<FileProps> } = {
     bmp: FileIconBmp,
     csv: FileIconCsv,
     avi: FileIconAvi,
@@ -98,7 +97,7 @@ export const File: React.FC<FileProps> = (props) => {
     xlsx: FileIconXls,
   };
 
-  function getIconByExtension(extension?: string): React.FC<FileIconProps> {
+  function getIconByExtension(extension?: string): React.FC<FileProps> {
     if (!extension) {
       return FileIconUndefined;
     }

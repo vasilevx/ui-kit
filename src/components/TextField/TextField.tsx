@@ -70,7 +70,6 @@ type Props = {
   tabIndex?: number;
   inputRef?: React.Ref<HTMLTextAreaElement | HTMLInputElement>;
   ariaLabel?: string;
-  children?: never;
 };
 
 export type TextFieldProps = PropsWithHTMLAttributes<Props, HTMLDivElement>;

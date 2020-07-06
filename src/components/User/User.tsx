@@ -24,7 +24,6 @@ type Props = {
   onlyAvatar?: boolean;
   withArrow?: boolean;
   info?: string;
-  children?: never;
 };
 
 const cnUser = cn('User');

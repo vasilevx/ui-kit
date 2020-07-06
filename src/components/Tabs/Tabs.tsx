@@ -20,7 +20,6 @@ type Props<T> = {
   onlyIcon?: boolean;
   view?: TabsPropView;
   getItemIcon?: (item: T) => React.FC<IconProps> | undefined;
-  children?: never;
 };
 export type TabsProps<T> = Props<T> &
   Omit<BaseCheckGroupFieldProps<T>, 'componentItem' | 'getAdditionalPropsForItem' | 'multiple'>;

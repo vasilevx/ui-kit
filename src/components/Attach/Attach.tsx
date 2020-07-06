@@ -22,7 +22,6 @@ type Props = {
   buttonTitle?: string;
   withAction?: boolean;
   className?: string;
-  children?: never;
 };
 
 export const cnAttach = cn('Attach');

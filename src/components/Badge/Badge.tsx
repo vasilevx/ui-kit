@@ -17,7 +17,6 @@ type Props = {
   minified?: boolean;
   icon?: React.FC<IconProps>;
   label?: string;
-  children?: never;
 };
 
 export const cnBadge = cn('Badge');
