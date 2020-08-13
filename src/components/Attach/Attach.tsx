@@ -47,12 +47,13 @@ export const Attach: ComponentWithAs<Props> = forwardRefWithAs<Props>((props, re
   } = props;
   const Tag = as as string;
   const withAction = withActionProp || Boolean(onClick);
+  const withOnButtonAction = Boolean(onButtonClick);
 
   return (
     <Tag
       {...otherProps}
       onClick={onClick}
-      className={cnAttach({ withAction }, [className])}
+      className={cnAttach({ withAction, withOnButtonAction }, [className])}
       ref={ref}
     >
       <File
@@ -85,7 +86,7 @@ export const Attach: ComponentWithAs<Props> = forwardRefWithAs<Props>((props, re
           </Text>
         )}
       </div>
-      {onButtonClick && (
+      {withOnButtonAction && (
         <Button
           className={cnAttach('Button')}
           onlyIcon
