@@ -5,7 +5,14 @@ const { Command, flags } = require('@oclif/command');
 const logSymbols = require('log-symbols');
 const { remove, ensureDir } = require('fs-extra');
 
-const { transformCSS, generateReExports, copyAssets, copyPackageJson } = require('./helpers');
+const {
+  transformCSS,
+  generateReExports,
+  copyAssets,
+  copyPackageJson,
+  copyReadme,
+  copyChangelog,
+} = require('./helpers');
 
 const execAsync = promisify(exec);
 const INTERNAL_PREFIX = '__internal__';
@@ -68,8 +75,12 @@ class GenerateCommand extends Command {
     this.log('starting to compile ts to js with commonJS');
     try {
       await Promise.all([
-        execAsync(`npx tsc -p ${tsconfig} --module es6 --outDir ${distEsSrc}`),
-        execAsync(`npx tsc -p ${tsconfig} --module commonjs --outDir ${distSrc}`),
+        execAsync(
+          `npx tsc -p ${tsconfig} --module es6 --project build.tsconfig.json  --outDir ${distEsSrc}`,
+        ),
+        execAsync(
+          `npx tsc -p ${tsconfig} --module commonjs --project build.tsconfig.json --outDir  ${distSrc}`,
+        ),
       ]);
     } catch (err) {
       console.error(err.stdout.toString());
@@ -81,6 +92,8 @@ class GenerateCommand extends Command {
 
     try {
       await copyPackageJson(distPath);
+      await copyReadme(distPath);
+      await copyChangelog(distPath);
       await Promise.all([
         transformCSS(ignore, srcPath, [distSrc, distEsSrc], {
           namespace,
