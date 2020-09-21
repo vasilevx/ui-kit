@@ -1,71 +1,76 @@
 import './Modal.css';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import { useClickOutside } from '../../hooks/useClickOutside/useClickOutside';
-import { IconClose } from '../../icons/IconClose/IconClose';
 import { cn } from '../../utils/bem';
-import { Button } from '../Button/Button';
+import { cnForCssTransition } from '../../utils/cnForCssTransition';
 import { PortalWithTheme } from '../PortalWithTheme/PortalWithTheme';
 import { useTheme } from '../Theme/Theme';
 
-type TModalProps = {
+const modalPropWidth = ['auto'] as const;
+type ModalPropWidth = typeof modalPropWidth[number];
+const modalPropWidthDefault: ModalPropWidth = modalPropWidth[0];
+
+const modalPropPosition = ['center', 'top'] as const;
+type ModalPropPosition = typeof modalPropPosition[number];
+const modalPropPositionDefault: ModalPropPosition = modalPropPosition[0];
+
+type ModalProps = {
   isOpen?: boolean;
-  onClose: (e: React.MouseEvent) => void;
-  hasCloseButton?: boolean;
-  closeByClickOnOverlay?: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
+  hasOverlay?: boolean;
+  onOverlayClick?: (event: MouseEvent) => void;
   className?: string;
+  width?: ModalPropWidth;
+  position?: ModalPropPosition;
   children?: React.ReactNode;
+  container?: HTMLDivElement | undefined;
 };
 
 const cnModal = cn('Modal');
 
-export const Modal: React.FC<TModalProps> = (props) => {
+export const Modal: React.FC<ModalProps> = (props) => {
   const {
     isOpen,
     onClose,
-    hasCloseButton = true,
-    closeByClickOnOverlay = true,
+    onOpen,
+    hasOverlay = true,
+    onOverlayClick,
     className,
+    width = modalPropWidthDefault,
+    position = modalPropPositionDefault,
     children,
+    container = window.document.body,
     ...rest
   } = props;
   const ref = React.useRef<HTMLDivElement | null>(null);
   const { theme } = useTheme();
 
-  const onCloseModal = (e: React.MouseEvent): void => {
-    if (isOpen) {
-      onClose(e);
-    }
-  };
-
   useClickOutside({
-    isActive: closeByClickOnOverlay,
+    isActive: !!onOverlayClick,
     ignoreClicksInsideRefs: [ref],
-    handler: (event: any) => onCloseModal(event),
+    handler: (event: MouseEvent) => onOverlayClick?.(event),
   });
 
-  const modal = (
-    <PortalWithTheme preset={theme} container={window.document.body}>
-      <div className={cnModal('Overlay')} aria-label="Оверлэй">
-        <div className={cnModal('Root', [className])} ref={ref} {...rest}>
-          {hasCloseButton && (
-            <Button
-              className={cnModal('CloseButton')}
-              aria-label="Кнопка закрытия"
-              view="clear"
-              type="button"
-              onClick={onCloseModal}
-              onlyIcon
-              iconLeft={IconClose}
-              iconSize="s"
-            />
-          )}
+  useEffect(() => {
+    if (isOpen) {
+      onOpen?.();
+    } else {
+      onClose?.();
+    }
+  }, [isOpen]);
+
+  return (
+    <CSSTransition in={isOpen} unmountOnExit classNames={cnForCssTransition(cnModal)} timeout={200}>
+      <PortalWithTheme preset={theme} container={container}>
+        {hasOverlay && <div className={cnModal('Overlay')} aria-label="Оверлэй" />}
+        <div className={cnModal('Window', { width, position }, [className])} ref={ref} {...rest}>
           {children}
         </div>
-      </div>
-    </PortalWithTheme>
+      </PortalWithTheme>
+    </CSSTransition>
   );
-
-  return isOpen ? modal : null;
 };

@@ -7,15 +7,13 @@ type TModalProps = React.ComponentProps<typeof Modal>;
 
 const testId = 'modal';
 const testChildrenId = 'modalChildren';
-const closeButtonAriaLabel = 'Кнопка закрытия';
 const overlayAriaLabel = 'Оверлэй';
 
-const renderComponent = (props: TModalProps) => {
-  const { onClose, ...rest } = props;
-  return render(
-    <Modal data-testid={testId} isOpen onClose={onClose} {...rest}>
+const getComponent = (props: TModalProps) => {
+  return (
+    <Modal data-testid={testId} isOpen {...props}>
       <h1 data-testid={testChildrenId}>test</h1>
-    </Modal>,
+    </Modal>
   );
 };
 
@@ -23,13 +21,13 @@ describe('Компонент Modal', () => {
   const onClose = jest.fn();
 
   it('должен рендериться без ошибок', () => {
-    renderComponent({ onClose });
+    render(getComponent({ onClose }));
   });
 
   describe('проверка props', () => {
     describe('проверка children', () => {
       it('отображается прокинутый компонент', () => {
-        renderComponent({ onClose });
+        render(getComponent({ onClose }));
         const modalChildren = screen.getByTestId(testChildrenId);
         expect(modalChildren).toBeInTheDocument();
       });
@@ -38,54 +36,44 @@ describe('Компонент Modal', () => {
     describe('проверка className', () => {
       it('присваивается дополнительный класс', () => {
         const className = 'className';
-        renderComponent({ onClose, className });
+        render(getComponent({ onClose, className }));
         const modal = screen.getByTestId(testId);
         expect(modal).toHaveClass(className);
       });
     });
   });
 
-  describe('проверка кнопки закрытия', () => {
-    it('должна рендериться по дефолту', () => {
-      renderComponent({ onClose });
-      const closeButton = screen.getByLabelText(closeButtonAriaLabel);
-      expect(closeButton).toBeInTheDocument();
-    });
-
-    it('не должна рендериться, передавая hasCloseButton={false}', () => {
-      renderComponent({ onClose, hasCloseButton: false });
-      const closeButton = screen.queryByLabelText(closeButtonAriaLabel);
-      expect(closeButton).not.toBeInTheDocument();
-    });
-
-    it('должна вызывать событие onClose по клику', () => {
-      renderComponent({ onClose, hasCloseButton: true });
-      const closeButton = screen.getByLabelText(closeButtonAriaLabel);
-      fireEvent.click(closeButton);
-      expect(onClose).toBeCalled();
-    });
-  });
-
   describe('проверка оверлэя', () => {
+    const onOverlayClick = jest.fn();
+
     it('должен рендериться по дефолту', () => {
-      renderComponent({ onClose });
+      render(getComponent({ onClose }));
       const overlay = screen.getByLabelText(overlayAriaLabel);
       expect(overlay).toBeInTheDocument();
     });
 
-    it('должен вызывать событие onClose по клику по дефолту', () => {
-      renderComponent({ onClose });
+    it('должен вызваться onOverlayClick по клику на оверлэй', () => {
+      render(getComponent({ hasOverlay: true, onOverlayClick }));
       const overlay = screen.getByLabelText(overlayAriaLabel);
-      fireEvent.click(overlay);
-      expect(onClose).toBeCalled();
+      fireEvent.mouseDown(overlay);
+      expect(onOverlayClick).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('проверка onOpen и onClose', () => {
+    const onOpen = jest.fn();
+    const onClose = jest.fn();
+    const { rerender } = render(getComponent({ onClose, onOpen }));
+
+    it('onOpen должен вызваться после рендера', () => {
+      expect(onOpen).toHaveBeenCalledTimes(1);
+      expect(onClose).toHaveBeenCalledTimes(0);
     });
 
-    it('не должен вызывать событие onClose по клику, передавая closeByClickOnOverlay={false}', () => {
-      renderComponent({ onClose, closeByClickOnOverlay: false });
-      const overlay = screen.getByLabelText(overlayAriaLabel);
-      const modal = screen.getByTestId(testId);
-      fireEvent.click(overlay);
-      expect(modal).toBeInTheDocument();
+    it('onClose должен вызваться после закрытия', () => {
+      rerender(getComponent({ onClose, onOpen, isOpen: false }));
+      expect(onOpen).toHaveBeenCalledTimes(1);
+      expect(onClose).toHaveBeenCalledTimes(1);
     });
   });
 });
