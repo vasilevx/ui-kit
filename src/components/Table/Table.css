@@ -69,6 +69,10 @@
     &_isDarkned {
       opacity: 0.3;
     }
+
+    .Table_withLazyLoad & {
+      word-break: break-word;
+    }
   }
 
   &-EmptyCell {

@@ -354,6 +354,7 @@ export const Table = <T extends TableRow>({
           isResizable,
           zebraStriped,
           withBorderBottom: !filteredData.length,
+          withLazyLoad: !!lazyLoad,
         },
         [className],
       )}
