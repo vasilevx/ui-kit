@@ -1,0 +1,29 @@
+.StepperStories {
+  display: flex;
+  flex-direction: column;
+  width: 550px;
+  height: 450px;
+  padding: 32px;
+  border: 1px solid var(--color-bg-border);
+  border-radius: var(--control-radius);
+  box-shadow: 0 4px 12px rgba(var(--color-nums-shadow), 0.08),
+    0 9px 24px rgba(var(--color-nums-shadow), 0.16);
+
+  &-Content {
+    flex: 1;
+    padding: 32px 0;
+  }
+
+  &-Actions {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-ResetButton {
+    margin-right: var(--space-xs);
+  }
+
+  &-Select {
+    margin: 32px 0;
+  }
+}

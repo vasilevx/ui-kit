@@ -1,0 +1,14 @@
+.Stepper {
+  display: grid;
+  grid-column-gap: var(--space-xs);
+
+  &_size {
+    &_m {
+      --step-font-size: var(--size-text-m);
+    }
+
+    &_l {
+      --step-font-size: var(--size-text-l);
+    }
+  }
+}
