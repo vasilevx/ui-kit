@@ -157,13 +157,15 @@ export const Table = <T extends TableRow>({
     headers[0][stickyColumns - 1]?.position.gridIndex +
     (headers[0][stickyColumns - 1]?.position.colSpan || 1);
 
-  const getColumnsWidth = React.useCallback(() => lowHeaders.map((column: TableColumn<T>) => column.width), [lowHeaders])
-  const [resizedColumnWidths, setResizedColumnWidths] = React.useState<ColumnWidth[]>(getColumnsWidth());
+  const getColumnsWidth = () => lowHeaders.map((column: TableColumn<T>) => column.width);
+  const [resizedColumnWidths, setResizedColumnWidths] = React.useState<ColumnWidth[]>(
+    getColumnsWidth(),
+  );
 
   React.useEffect(() => {
-    setResizedColumnWidths(getColumnsWidth())
+    setResizedColumnWidths(getColumnsWidth());
   }, [lowHeaders]);
-  
+
   const [initialColumnWidths, setInitialColumnWidths] = React.useState<number[]>([]);
   const [sorting, setSorting] = React.useState<SortingState<T>>(null);
   const [visibleFilter, setVisibleFilter] = React.useState<string | null>(null);
@@ -352,12 +354,12 @@ export const Table = <T extends TableRow>({
   );
 
   const rowsData = getSlicedRows(filteredData);
-  
+
   const tableStyle: React.CSSProperties & TableCSSCustomProperty = {
     'gridTemplateColumns': getColumnsSize(resizedColumnWidths),
     '--table-width': `${tableWidth}px`,
   };
-  
+
   const hasMergedCells: boolean = columnsWithMetaData(lowHeaders).some(
     (header) => header.mergeCells,
   );
