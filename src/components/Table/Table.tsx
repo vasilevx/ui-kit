@@ -164,7 +164,7 @@ export const Table = <T extends TableRow>({
 
   React.useEffect(() => {
     setResizedColumnWidths(getColumnsWidth());
-  }, [lowHeaders]);
+  }, [lowHeaders.length]);
 
   const [initialColumnWidths, setInitialColumnWidths] = React.useState<number[]>([]);
   const [sorting, setSorting] = React.useState<SortingState<T>>(null);
