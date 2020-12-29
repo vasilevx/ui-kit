@@ -2,6 +2,7 @@ import * as React from 'react';
 import { action } from '@storybook/addon-actions';
 import { boolean, select, text } from '@storybook/addon-knobs';
 
+import { EventInterceptorProvider } from '../../../EventInterceptor/EventInterceptor';
 import { IconSelect } from '../../../icons/IconSelect/IconSelect';
 import { IconUser } from '../../../icons/IconUser/IconUser';
 import { cn } from '../../../utils/bem';
@@ -52,21 +53,23 @@ export function Playground() {
   } = defaultKnobs();
 
   return (
-    <div className={cnButtonStories()}>
-      <Button
-        width={width}
-        size={size}
-        view={view}
-        form={form}
-        disabled={disabled}
-        loading={loading}
-        label={label}
-        onlyIcon={onlyIcon}
-        onClick={action('click')}
-        iconLeft={iconLeft ? IconUser : undefined}
-        iconRight={iconRight ? IconSelect : undefined}
-      />
-    </div>
+    <EventInterceptorProvider>
+      <div className={cnButtonStories()}>
+        <Button
+          width={width}
+          size={size}
+          view={view}
+          form={form}
+          disabled={disabled}
+          loading={loading}
+          label={label}
+          onlyIcon={onlyIcon}
+          onClick={action('click')}
+          iconLeft={iconLeft ? IconUser : undefined}
+          iconRight={iconRight ? IconSelect : undefined}
+        />
+      </div>
+    </EventInterceptorProvider>
   );
 }
 

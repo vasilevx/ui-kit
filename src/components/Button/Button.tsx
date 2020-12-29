@@ -9,6 +9,8 @@ import { getSizeByMap } from '../../utils/getSizeByMap';
 import { forwardRefWithAs } from '../../utils/types/PropsWithAsAttributes';
 import { Loader } from '../Loader/Loader';
 
+import { useButtonEventsHandler } from './useButtonEventsHandler';
+
 export const buttonPropSize = ['m', 'xs', 's', 'l'] as const;
 export type ButtonPropSize = typeof buttonPropSize[number];
 export const buttonPropSizeDefault: ButtonPropSize = buttonPropSize[0];
@@ -33,7 +35,7 @@ export const buttonPropForm = [
 export type ButtonPropForm = typeof buttonPropForm[number];
 export const buttonPropFormDefault: ButtonPropForm = buttonPropForm[0];
 
-type Props = {
+export type Props = {
   size?: ButtonPropSize;
   view?: ButtonPropView;
   width?: ButtonPropWidth;
@@ -78,7 +80,7 @@ export const Button = forwardRefWithAs<Props, 'button'>((props, ref) => {
     onlyIcon,
     iconSize: iconSizeProp,
     ...otherProps
-  } = props;
+  } = useButtonEventsHandler(props);
 
   const Tag = as as string;
   const IconOnly = (!label || onlyIcon) && (iconLeft || iconRight);
