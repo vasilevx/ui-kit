@@ -21,7 +21,10 @@ import { Checkbox } from '../../Checkbox/Checkbox';
 import { OrderedOption, smartSort, SmartSorting } from '../../SmartSorting/SmartSorting';
 import { Text } from '../../Text/Text';
 import { verticalAligns } from '../Cell/TableCell';
+import { TableCheckboxGroupFilter } from '../CheckboxGroupFilter/TableCheckboxGroupFilter';
+import { TableChoiceGroupFilter } from '../ChoiceGroupFilter/TableChoiceGroupFilter';
 import { Filters } from '../filtering';
+import { TableRangeFilter } from '../RangeFilter/TableRangeFilter';
 import { Props, sizes, Table, TableColumn, TableRow, zebraStriped } from '../Table';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -124,6 +127,59 @@ export const WithBagde = createStory(
   },
   {
     name: 'с Bagde',
+  },
+);
+
+export const WithFilters = createStory(
+  () => {
+    return (
+      <div className={cnTableStories({ fixedSize: true })}>
+        <Table
+          {...getKnobs(tableData)}
+          filters={{
+            year: {
+              field: 'year',
+              id: 'yearFilter',
+              filterer: (value, { min, max }) => {
+                return value <= max && value >= min;
+              },
+              filterComponent: TableRangeFilter,
+              filterComponentProps: {},
+            },
+
+            field: {
+              field: 'field',
+              id: 'fieldFilter',
+              filterer: (value, selectedValue) => {
+                return selectedValue.name === value;
+              },
+              filterComponent: TableChoiceGroupFilter,
+              filterComponentProps: { items: [{ name: 'Приобское', value: 'Приобское' }] },
+            },
+
+            type: {
+              field: 'type',
+              id: 'typeFilter',
+              filterer: (value, selectedValue: Array<{ name: string }>) => {
+                return selectedValue.some(({ name }) => name === value);
+              },
+              filterComponent: TableCheckboxGroupFilter,
+              filterComponentProps: {
+                withSearch: true,
+                items: [
+                  { name: 'Нефтяное' },
+                  { name: 'Конденсатное' },
+                  { name: 'Комбинированное' },
+                ],
+              },
+            },
+          }}
+        />
+      </div>
+    );
+  },
+  {
+    name: 'с фильтрами',
   },
 );
 
