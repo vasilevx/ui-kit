@@ -1,3 +1,6 @@
+import { TableCustomFilterCheckboxGroup } from '../CustomFilterCheckboxGroup/TableCustomFilterCheckboxGroup';
+import { fieldCustomFilterPresent, isSomeCustomFilterActive } from '../customFiltering';
+import { TableCustomFilterRange } from '../CustomFilterRange/TableCustomFilterRange';
 import {
   fieldFiltersPresent,
   filterTableData,
@@ -312,5 +315,77 @@ describe('isSelectedFiltersPresent', () => {
         price: ['priceEqual100'],
       }),
     ).toEqual(true);
+  });
+});
+
+describe('fieldCustomFilterPresent', () => {
+  it('возвращает false, если фильтра нет', () => {
+    expect(
+      fieldCustomFilterPresent(
+        {
+          year: {
+            filterer: jest.fn(),
+            filterComponent: TableCustomFilterRange,
+          },
+        },
+        'name',
+      ),
+    ).toBe(false);
+  });
+
+  it('возвращает true, если фильтр есть', () => {
+    expect(
+      fieldCustomFilterPresent(
+        {
+          year: {
+            filterer: jest.fn(),
+            filterComponent: TableCustomFilterRange,
+          },
+          name: {
+            filterer: jest.fn(),
+            filterComponent: TableCustomFilterCheckboxGroup,
+            filterComponentProps: {
+              items: [
+                { name: 'Андрей', value: 'andrey' },
+                { name: 'Анна', value: 'anna' },
+              ],
+            },
+          },
+        },
+        'name',
+      ),
+    ).toBe(true);
+  });
+
+  it('возвращает false, если фильтров нет', () => {
+    expect(fieldCustomFilterPresent({}, 'name')).toBe(false);
+  });
+});
+
+describe('isSomeCustomFilterActive', () => {
+  it('возвращает true, если есть активный фильтр', () => {
+    expect(
+      isSomeCustomFilterActive({
+        year: {
+          filterer: jest.fn(),
+          filterComponent: TableCustomFilterRange,
+          isActive: true,
+          value: { min: 18, max: 100 },
+        },
+      }),
+    ).toBe(true);
+  });
+
+  it('возвращает false, если нет активных фильтров', () => {
+    expect(
+      isSomeCustomFilterActive({
+        year: {
+          filterer: jest.fn(),
+          filterComponent: TableCustomFilterRange,
+          isActive: false,
+          value: { min: 18, max: 100 },
+        },
+      }),
+    ).toBe(false);
   });
 });
